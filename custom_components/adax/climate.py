@@ -4,6 +4,9 @@ import logging
 import voluptuous as vol
 from homeassistant.components.climate import PLATFORM_SCHEMA, ClimateEntity
 from homeassistant.components.climate.const import (
+    CURRENT_HVAC_HEAT,
+    CURRENT_HVAC_IDLE,
+    CURRENT_HVAC_OFF,
     HVAC_MODE_HEAT,
     HVAC_MODE_OFF,
     SUPPORT_TARGET_TEMPERATURE,
@@ -82,11 +85,14 @@ class AdaxDevice(ClimateEntity):
 
     @property
     def icon(self):
-        """Return nice icon for heater."""
-        if self.hvac_mode == HVAC_MODE_HEAT:
+        """Return icon to show if radiator is heating, not heating or set to off."""
+        if self.hvac_action == CURRENT_HVAC_HEAT:
             return "mdi:radiator"
-        return "mdi:radiator-off"
-
+        elif self.hvac_action == CURRENT_HVAC_IDLE:
+            return "mdi:radiator-disabled" # looks like a radiator not producing heat
+        else:  # should be CURRENT_HVAC_OFF
+            return "mdi:radiator-off" # looks like a crossed-out radiator
+    
     @property
     def hvac_modes(self):
         """Return the list of available hvac operation modes."""
@@ -108,6 +114,16 @@ class AdaxDevice(ClimateEntity):
         else:
             return
         await self._adax_data_handler.update()
+
+    @property
+    def hvac_action(self);
+        """Return current hvac action."""
+        if self._heater_data['heatingEnabled']:
+            if self._heater_data['targetTemperature'] > self._heater_data['temperature']:
+                return CURRENT_HVAC_HEAT
+            else:
+                return CURRENT_HVAC_IDLE
+        return CURRENT_HVAC_OFF
 
     @property
     def temperature_unit(self):
