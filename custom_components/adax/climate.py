@@ -7,7 +7,7 @@ from homeassistant.components.climate.const import (
     CURRENT_HVAC_HEAT,
     CURRENT_HVAC_IDLE,
     CURRENT_HVAC_OFF,
-    HVAC_MODE_HEAT,
+    HVAC_MODE_AUTO,
     HVAC_MODE_OFF,
     SUPPORT_TARGET_TEMPERATURE,
 )
@@ -80,7 +80,7 @@ class AdaxDevice(ClimateEntity):
     def hvac_mode(self):
         """Return hvac operation ie. heat, cool mode."""
         if self._heater_data["heatingEnabled"]:
-            return HVAC_MODE_HEAT
+            return HVAC_MODE_AUTO
         return HVAC_MODE_OFF
 
     @property
@@ -96,11 +96,11 @@ class AdaxDevice(ClimateEntity):
     @property
     def hvac_modes(self):
         """Return the list of available hvac operation modes."""
-        return [HVAC_MODE_HEAT, HVAC_MODE_OFF]
+        return [HVAC_MODE_AUTO, HVAC_MODE_OFF]
 
     async def async_set_hvac_mode(self, hvac_mode):
         """Set hvac mode."""
-        if hvac_mode == HVAC_MODE_HEAT:
+        if hvac_mode == HVAC_MODE_AUTO:
             temperature = max(
                 self.min_temp, self._heater_data.get("targetTemperature", self.min_temp)
             )
