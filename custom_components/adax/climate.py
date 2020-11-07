@@ -116,7 +116,7 @@ class AdaxDevice(ClimateEntity):
         await self._adax_data_handler.update()
 
     @property
-    def hvac_action(self);
+    def hvac_action(self):
         """Return current hvac action."""
         if self._heater_data['heatingEnabled']:
             if self._heater_data['targetTemperature'] > self._heater_data['temperature']:
