@@ -6,5 +6,5 @@
   "codeowners": ["@jon-hedgerows", "@danielhiversen"],
   "issue_tracker": "https://github.com/jon-hedgerows/home_assistant_adax/issues",
   "config_flow": true,
-  "version": "0.4.3_j1"
+  "version": "2021.04.01"
 }
